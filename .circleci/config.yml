@@ -1,7 +1,4 @@
-version: "2.1"
-orbs:
-  node: 'circleci/node:4.1'
-  slack: circleci/slack@4.1
+version: 2.1
 
 commands:
 #   destroy-environment:
@@ -35,20 +32,7 @@ commands:
 #               exit 1
 #             fi
             
-jobs:
-deploy:
-    executor:
-      name: node/default
-    steps:
-      - checkout
-      - node/install-packages
-      - run:
-          command: npm run deploy
-      - slack/notify:
-          channel: $SLACK_DEFAULT_CHANNEL
-          event: fail
-          template: basic_fail_1
-          
+jobs:        
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -342,10 +326,6 @@ deploy:
             
 
 workflows:
-  deploy_and_notify:
-    jobs:
-      - deploy:
-          context: slack-secrets
   default:
     jobs:
       - build-frontend
