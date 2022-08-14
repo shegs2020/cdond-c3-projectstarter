@@ -6,8 +6,8 @@ commands:
     parameters:
       # Add parameter here
       workflow_id:
-      default: "${CIRCLE_WORKFLOW_ID:0:7}"
-      type: string   
+        default: "${CIRCLE_WORKFLOW_ID:0:7}"
+        type: string   
     steps:
       - run:
           name: Destroy environments
