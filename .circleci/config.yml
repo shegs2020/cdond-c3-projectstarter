@@ -336,9 +336,8 @@ jobs:
           command: |
             # your code here
             cd frontend
-            npm install
+            npm install -g npm@latest
             npm run build
-            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # Here's where you will add some code to rollback on failure 
       - destroy-environment
@@ -373,7 +372,7 @@ jobs:
             mkdir files
             cd files
             # Zip the directory
-            tar -C backend -czvf artifact.tar.gz .
+            tar -C ../../../backend -czvf artifact.tar.gz .
             cd ../
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
