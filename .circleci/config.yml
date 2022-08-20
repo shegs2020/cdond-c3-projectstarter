@@ -439,9 +439,9 @@ jobs:
             echo $URL
             if curl ${URL} | grep "Welcome" 
             then 
-              return 1 
+              exit 1 
             else 
-              return 1 
+              exit 1 
             fi
       # Here's where you will add some code to rollback on failure
       - destroy-environment
