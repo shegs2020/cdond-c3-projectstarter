@@ -476,7 +476,7 @@ jobs:
       - revert-migrations  
 
 
-cleanup:
+  cleanup:
     docker:
       # Docker image here
       - image: cimg/base:stable
