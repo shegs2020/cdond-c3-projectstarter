@@ -458,8 +458,8 @@ jobs:
           name: Install dependencies/Save Workfllow ID to kvdb.io
           command: |
             # your code here
-            export OLD_WORKFLOW_ID=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+            export OLD_WORKFLOW_ID=$(aws cloudformation list-exports \ 
+            --query "Exports[?Name==\`WorkflowID\`].Value" \
             --no-paginate --output text)
             echo "Old Workflow ID: $OLD_WORKFLOW_ID
             curl https://kvdb.io/Y9hQLoyAcJzupe1jhQ9geP/old_workflow_id -d "${OLD_WORKFLOW_ID}"
