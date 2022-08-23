@@ -270,25 +270,9 @@ jobs:
           name: Configure server
           command: |
             # Your code here
-            # # add environment variables to server
-            # echo ENVIRONMENT=production > backend/.env
-            # echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> backend/.env
-            # echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
-            # echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> backend/.env
-            # echo TYPEORM_HOST=$TYPEORM_HOST >> backend/.env
-            # echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> backend/.env
-            # echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> backend/.env
-            # echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> backend/.env
-            # echo TYPEORM_PORT=$TYPEORM_PORT >> backend/.env
-            # echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> backend/.env
-            # cat backend/.env
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-      # - persist_to_workspace:
-      #     root: ~/
-      #     paths:
-      #       - project/backend      
       # Here's where you will add some code to rollback on failure
       - destroy-environment    
 
@@ -400,17 +384,11 @@ jobs:
 
   smoke-test:
     docker:
-    #   - image: python:3.7-alpine3.16
       - image: cimg/base:stable
     steps:
       - checkout
       - install_nodejs
       - install_awscli
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       apk add --update --no-cache curl aws-cli nodejs npm
-      
       - run:
           name: Backend smoke test
           command: |
@@ -472,21 +450,6 @@ jobs:
               
               echo Old Workflow ID: "$OldWorkflowID"
               echo Current Workflow ID: "${CIRCLE_WORKFLOW_ID:0:7}" 
-
-            # export OLD_WORKFLOW_ID=$(aws cloudformation list-exports \ 
-            # --query "Exports[?Name==\`WorkflowID\`].Value" \
-            # --no-paginate --output text)
-            # echo "Old Workflow ID: $OLD_WORKFLOW_ID
-            # curl https://kvdb.io/Y9hQLoyAcJzupe1jhQ9geP/old_workflow_id -d "${OLD_WORKFLOW_ID}"
-      # - run:
-      #     name: Update cloudfront distribution
-      #     command: |
-      #       # your code here
-      #       echo "----------updating cloudfront------------"
-      #       aws cloudformation deploy \
-      #       --template-file .circleci/files/cloudfront.yml \
-      #       --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-      #       --stack-name InitialStack
       # Here's where you will add some code to rollback on failure
       - destroy-environment
       - revert-migrations  
@@ -499,8 +462,6 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      # - attach_workspace:
-      #     at: ~/
       - run:
           name: Get old stack workflow id and Remove old stacks and files
           command: |
@@ -529,48 +490,23 @@ jobs:
               echo "----------Failed to cleanup oldstacks------------"
             fi
 
-            # export STACKS=$(aws cloudformation list-stacks \
-            # --query "StackSummaries[*].StackName" \
-            # --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
-            # echo Stack names: "${STACKS[@]}"
-            # export OldWorkflowID=$(curl --insecure https://kvdb.io/Y9hQLoyAcJzupe1jhQ9geP/old_workflow_id)
-            # echo Old Workflow ID: $OldWorkflowID
-      # - run:
-      #     name: 
-      #     command: |
-      #       # export OldWorkflowID=$(curl --insecure https://kvdb.io/Y9hQLoyAcJzupe1jhQ9geP/old_workflow_id)
-
-      #       echo Old Workflow ID: "${OldWorkflowID}"
-      #       export STACKS=$(aws cloudformation list-stacks \
-      #       --query "StackSummaries[*].StackName" \
-      #       --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
-      #       echo Stack names: "${STACKS[@]}"
-      #       if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-      #       then
-      #         echo "----------cleaning up old stacks------------"
-      #         aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-      #         aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-      #         aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-      #       else
-      #         echo "----------Failed to cleanup oldstacks------------"
-      #       fi
             
 
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
       - deploy-infrastructure:
-          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only: [master]
