@@ -490,7 +490,32 @@ jobs:
               echo "----------Failed to cleanup oldstacks------------"
             fi
 
-            
+  configure-prometheus-node-exporter:
+    docker:
+      # Docker image here that supports Ansible
+      - image: cimg/base:stable
+    steps:
+      # Checkout code from git
+      - checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints:
+            - "1a:d8:9e:66:3d:5f:ff:c5:8b:74:08:7f:26:73:29:0d"
+      # attach workspace
+      - attach_workspace:
+          at: ~/
+      - install_ansible
+      - install_awscli
+      - run:
+          name: Configure Prometheus Node Exporter
+          command: |
+            # Your code here
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-prometheus-node-exporter.yml
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment    
+      - revert-migrations
 
 workflows:
   default:
@@ -510,6 +535,8 @@ workflows:
           filters:
             branches:
               only: [master]
+      - configure-prometheus-node-exporter:
+          requires: [deploy-infrastructure]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
@@ -524,3 +551,4 @@ workflows:
           requires: [smoke-test]
       - cleanup:
           requires: [cloudfront-update]
+      
