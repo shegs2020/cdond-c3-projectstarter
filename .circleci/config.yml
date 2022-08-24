@@ -481,7 +481,7 @@ jobs:
             --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
             echo Stack names: "${STACKS[@]}"
             # if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
+            if [[ "${STACKS[@]}" != "${OldWorkflowID}" ]]
             then
               echo "----------cleaning up old stacks and files------------"
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
