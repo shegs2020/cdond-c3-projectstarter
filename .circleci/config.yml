@@ -197,7 +197,7 @@ jobs:
             # npm audit --audit-level=critical
             npm audit fix --audit-level=critical
       - save_cache:
-          paths: [frontend/node_modules]
+          paths: [backend/node_modules]
           key: backend-scan
 
   deploy-infrastructure:
