@@ -535,12 +535,12 @@ workflows:
           filters:
             branches:
               only: [master]
-      - configure-prometheus-node-exporter:
-          requires: [deploy-infrastructure]
       - configure-infrastructure:
-          requires: [configure-prometheus-node-exporter]
-      - run-migrations:
+          requires: [deploy-infrastructure]
+      - configure-prometheus-node-exporter:
           requires: [configure-infrastructure]
+      - run-migrations:
+          requires: [configure-prometheus-node-exporter]
       - deploy-frontend:
           requires: [run-migrations]
       - deploy-backend:
