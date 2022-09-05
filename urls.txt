@@ -1,0 +1,19 @@
+SEGUN ADENAYA
+
+UDACITY ALX-T CLOUD-DEVOPS PROJECT 3  | AUGUST, 2022
+============================================
+
+GITHUB REPO:
+[URL01] https://github.com/shegs2020/cdond-c3-projectstarter
+
+=====================================================
+
+CLOUDFRONT URL:
+Public URL for your S3 Bucket (aka, your green candidate front-end) 
+[URL02] http://udapeople-588258f.s3-website-us-east-1.amazonaws.com/#/employees
+
+
+
+
+
+
