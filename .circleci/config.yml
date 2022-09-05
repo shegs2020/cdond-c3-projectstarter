@@ -314,7 +314,6 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "1a:d8:9e:66:3d:5f:ff:c5:8b:74:08:7f:26:73:29:0d"
-      # attach workspace
       - attach_workspace:
           at: ~/
       - install_nodejs
